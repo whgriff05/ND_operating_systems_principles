@@ -35,9 +35,9 @@ When a timer interrupt goes off, the kernel has the option of performing a __con
 
 ```
         |-> Ready -----|
-        |   ⌄   ^      |
+        |   ⌄ ^ ^      |
 New ----|-> Running ---|---> Terminated
-        |   ⌄   ^      |
+        |   ⌄   |      |
         |-> Blocked ---|
 ```
 
@@ -47,7 +47,8 @@ New ----|-> Running ---|---> Terminated
 
 ## Process Life Cycle
 
-1. A current process __A__ calls `fork()`, allocating a new process __B__ with a copied machine state
+1. A current process __A__ calls `fork()`, allocating a new child process __B__ with a copied machine state
 2. New process __B__ calls `exec()` to clear the address space, load the new code, and reset the execution context
 3. Process __B__ exits with `exit()`, reporting exit status to parent
 4. Process __A__ `wait()`s, receiving that child's exit status and cleaning it up (deallocated)
+    - *Note: use `WEXITSTATUS()` on exit status to get the actual value*
