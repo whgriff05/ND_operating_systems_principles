@@ -65,6 +65,7 @@ constantly deprioritized: this is known as __process starvation__
 - FIFO is a straightforward algorithm
 - Good turnaround time (generally), but poor response time
 - It can suffer from the convoy effect
+- Sometimes benefits from the *Shortest Job First* addition
 
 ## Round-Robin
 
@@ -72,7 +73,7 @@ __Algorithm:__ each process is executed for a certain time-slice (time allotment
 
 This is a __fair__ policy because it evenly divides the processor among active processes
 
-### Example 1: Jobs A, B, and C arrive at time 0 and run for 5 seconds each
+### Example 1: Jobs A, B, and C arrive at time 0 and run with a time-slice of 1 second
 `T_turnaround_avg = (13 + 14 + 15) / 3 = 14 s/job` \
 `T_response_avg = (0 + 1 + 2) / 3 = 1 s/job`
 
@@ -84,3 +85,4 @@ Notice: the huge improvement in response time
 - Poor turnaround time, strong in response time
 - Requires pre-emption (a timer interrupt)
 - Overhead due to constant context switching
+- Divides the CPU evenly: it is a __fair__ algorithm
