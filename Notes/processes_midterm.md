@@ -49,7 +49,7 @@ Processor consults the __interrupt vector table__ (or __trap table__) to determi
 ## Processes
 
 Recall that a __process__ is a __loaded instance of a program__ (a __unit of allocation__) with a __machine state__
-- __addres space__: code, data, heap, stack
+- __address space__: code, data, heap, stack
 - __kernel state__: PID, owner, file descriptors
 - __execution context__: program counter, registers, stack pointer
 
