@@ -136,3 +136,14 @@ __Response Time__: time between a job arriving on the schedule queue and the job
 - Involves some tricks and magic (voodoo) numbers
 - Without a priorty boost to processes, processes can __starve__ at the lowest priority where higher priority processes will always get to run over them
 
+## Additions
+
+### `pqsh`
+
+Other notable system calls
+- `setitimer()` - sets an interval timer that sets off `SIGALRM` after time
+- `sigaction()` - to handle signals when they are received
+
+### Round-Robin Scheduling Rule
+
+Add a new process first, then rotate the queue
