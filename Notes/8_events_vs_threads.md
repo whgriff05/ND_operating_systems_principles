@@ -20,6 +20,27 @@ In this system, we use an __event loop__
 
 ## Threads
 
+A thread is an __abstraction of an execution context__
+
+### Quick Comparison: Thread vs Process
+
+__Thread__
+- Abstraction of an execution context (saved on context switch)
+- (+) Parallelism
+- (~) Sharing
+- (~) Locks
+
+__Process__
+- Abstraction of the CPU
+    - Address space (not saved on context switch - in memory)
+    - Kernel state (not saved on context switch - in memory)
+    - Execution context (saved on context switch - on processor)
+- (+) Parallelism
+- (~) No sharing
+- (~) Needs Inter-Process Communication (IPC)
+
+### Implementation
+
 We can implement __thread-based concurrency__ by using `pthreads` or POSIX threads, defining functions for
 - Creating threads
 - Waiting on threads
