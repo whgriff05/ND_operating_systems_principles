@@ -8,11 +8,12 @@ We use a __lock__ or a __mutual exclusion (mutex)__ to guard a __critical sectio
 code that __accesses a shared resource__
 
 ```C
+// One declaration and initialization method
 pthread_mutex_t lock;                   // Declare lock
 pthread_mutex_init(&lock, NULL)         // Initialize lock
 
 // Alternative declaration and initialization method
-/* pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER */
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER
 
 pthread_mutex_lock(&lock);              // Acquire lock (lock down the memory to this thread)
 access_resource();                      // Perform access of shared resource
