@@ -82,7 +82,7 @@ def Consumer(queue):
 
 ```py
 # Attempt 5: Locks
-# Issues: Deadlock
+# Issues: Deadlock in busywaiting
 
 def Producer(queue):
     while True:
@@ -138,6 +138,7 @@ def pop(queue):
 2. Go to sleep
 3. Upon signal from `cond`, wake up
 4. Take back lock
+- *We want to do this in a while loop because the next time the thread wakes up, the condition might __not__ have changed*
 
 ## Separate Condition Variables
 
