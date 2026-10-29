@@ -98,3 +98,137 @@ Notes:
 __Pros of Base and Bounds:__ Protection, Relocation
 
 __Cons of Base and Bounds:__ Hard to update, Prone to external fragmentation and internal fragmentation
+
+## Memory API
+
+```C
+// How would we allocate an array of 1,000,000 ints?
+int* a = malloc(1000000 * sizeof(int));
+int* b = calloc(1000000, sizeof(int));
+
+// How do we deallocate these arrays?
+free(a);
+free(b);
+```
+
+### Common Errors
+
+```C
+// Issue
+char* buffer;
+fgets(buffer, BUFSIZ, stdin);
+```
+
+__Segmentation Fault:__ We do not allocate __any__ memory for this to use
+
+```C
+// Solution
+char buffer[BUFSIZ];
+fgets(buffer, BUFSIZ, stdin);
+```
+
+---
+
+```C
+// Issue
+char* src = "abcdef";
+char* dst = malloc(strlen(src));
+
+strcpy(dst, src);
+```
+
+__Buffer Overflow:__ Did not allocate __enough__ memory
+
+```C
+// Solution
+char* src = "abcdef";
+char* dst = strdup(src);
+```
+
+---
+
+```C
+// Issue
+char* s = malloc(100 * sizeof(char));
+puts(s);
+```
+
+__Uninitialized Read:__ Did not initialize memory
+
+```C
+// Solution
+char* s = calloc(100, sizeof(char));
+puts(s);
+```
+
+---
+
+```C
+// Issue
+for (int i = 1; i < argc; ++i) {
+    char* s = strdup(argv[i]);
+    process(s);
+}
+```
+
+__Memory Leak:__ Did not free memory
+
+```C
+// Solution
+for (int i = 1; i < argc, ++i) {
+    char *s = strdup(argv[i]);
+    process(s);
+    free(s);
+}
+```
+
+---
+
+```C
+// Issue
+for (int i = 1; i < argc; ++i) {
+    char* s = strdup(argv[i]);
+    process(s);
+    free(s);
+    puts(s);
+}
+```
+
+__Dangling Pointer:__ Pointer with no allocated memory \
+__Use-After-Free:__ Using a pointer with nothing
+
+---
+
+```C
+// Issue
+for (int i = 1; i < argc; i++) {
+    char *s = strdup(argv[i]);
+    if (check(s)) { free(s); }
+    free(s);
+}
+```
+
+__Double Free:__ Pointer is freed twice
+
+---
+
+```C
+// Issue
+for (int i = 1; i < argc; i++) {
+    char *s = argv[i];
+    process(s);
+    free(s);
+}
+```
+
+__Invalid Free:__ Attempt to free non-dynamically allocated memory
+
+### Multiple Levels of Memory Management
+
+Process Level: individual `malloc`s and `free`s
+
+OS Level: deallocates an entire process when it completes (including __all__ allocated memory)
+
+You do not have to *always* clean up after yourself, __but for longer running processes, it is typically
+better to handle it yourself to avoid memory leaks__
+
