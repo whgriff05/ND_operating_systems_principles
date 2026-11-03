@@ -74,3 +74,17 @@ __coalesce__ or __merge__ them.
 ```
 
 Helps reduce __external fragmentation__
+
+## Free List
+
+If you had a large chunk of memory and allocated blocks to it, how would you know where 
+the next block to be allocated should go?
+
+The solution is to have a metadata `struct` containing the following
+- __size:__ number of bytes used
+- __capacity:__ number of bytes allocated (aligned)
+- __previous:__ pointer to previous block
+- __next:__ pointer to next block
+
+Impose a __linked list__ on the free list array
+
