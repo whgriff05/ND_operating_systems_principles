@@ -26,7 +26,7 @@ struct block {
     Block *  prev;          /* Pointer to previous block */
     Block *  next;          /* Pointer to next block */
     char     data[];        /* "Label" to the block contents - 0 bytes so that the block data can be accessed as an array*/
-};                          /* sizeof(Block) = 32 */
+};                          /* sizeof(Block) = 32  (good for alignment) */
 
 Block * block_allocate(size_t size) {
     intptr_t allocated = sizeof(Block) + ALIGN(size);
@@ -46,6 +46,15 @@ Block * block_allocate(size_t size) {
 
 Block * block_detach(Block *block) {
     /* Update prev and next blocks to reference each other */
+    Block* prev = block->prev;
+    Block* next = block->next;
+
+    prev->next = next;
+    next->prev = prev;
+
+    block->prev = NULL;
+    block->next = NULL;
+
     return block;
 }
 
@@ -68,6 +77,19 @@ Block * free_list_search(size_t size) {
 
 void    free_list_insert(Block *block) {
     /* Append to tail */
+
+    // Insert in sorted order to perform coalescence
+
+    Block* tail = FreeList.prev;
+
+    tail->next = block;
+    FreeList.prev = block;
+
+    block->prev = tail;
+    block->next = &FreeList;
+
+    // To combat external fragmentation: block_merge()
+    // 2 merges: merge with block after, and merge with block before
 }
 
 /* POSIX API Functions */
@@ -86,10 +108,13 @@ void *malloc(size_t size) {
 
     /* Could not find free block or allocate a block, so just return NULL */
     if (!block) {
-        block = block_allocate(size);
+        block = block_allocate(size); // Calls sbrk, grows heap
     } else {
-        block = block_detach(block);
+        // To combat internal fragmentation: block_split()
+        block = block_detach(block);  // Remove from free list since in use
     }
+
+    if (block == NULL) return NULL;
 
     /* Return data address associated with block */
     return block->data;
@@ -100,6 +125,11 @@ void *malloc(size_t size) {
  * @param   ptr     Pointer to previously allocated memory.
  **/
 void free(void *ptr) {
+    if (!ptr) return;
+
+    Block* block = BLOCK_FROM_POINTER(ptr);
+
+    free_list_insert(block);
 }
 
 /* vim: set expandtab sts=4 sw=4 ts=8 ft=c: */
