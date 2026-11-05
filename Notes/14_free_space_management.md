@@ -88,3 +88,10 @@ The solution is to have a metadata `struct` containing the following
 
 Impose a __linked list__ on the free list array
 
+## System Calls
+
+We use `sbrk()` to move the program break (end of data segment) upward, allocating __heap__ memory
+- `sbrk(0)` gets current address of heap
+- `sbrk(x)` where `x` is positive allocates heap memory, giving its starting address
+- `sbrk(y)` where `y` is negative deallocates heap memory, but __be careful to not release in-use blocks
+and to not release any of the data segment__
