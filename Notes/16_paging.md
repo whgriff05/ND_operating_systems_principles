@@ -75,3 +75,57 @@ leading to high memory usage
 - __Indirection:__ Each memory access requires a page table entry lookup, meaning we have 2 
 physical memory accesses per virtual address
     - Quasi-solution: Use a __cache__ (Translation-Lookaside Buffer: Comp Arch!)
+
+## How does paging work?
+
+We have __pages__ in the virtual address space and __page frames__ in the physical address space, 
+and we need to map them to each other
+
+| # | Address Space |
+|-|-|
+|7| Stack |
+|6| Stack |
+|5| |
+|4| |
+|3| |
+|2| Heap |
+|1| Data |
+|0| Code |
+
+|#|Physical Page Frames|
+|-|-|
+|7| |
+|6| |
+|5| |
+|4| |
+|3| |
+|2| |
+|1| |
+|0| |
+
+Therefore, in the __page table__, we can have
+
+| VPN | PFN | Valid Bit | Protection Bit |
+|-|-|-|-|
+| 0 | 2 | 1 | `r-x` |
+| 1 | 0 | 1 | `rw-` |
+| 2 | 4 | 1 | `rw-` |
+| 3 | - | 0 | `---` |
+| 4 | - | 0 | `---` |
+| 5 | - | 0 | `---` |
+| 6 | 7 | 1 | `rw-` |
+| 7 | 5 | 1 | `rw-` |
+
+### Observations
+
+- One page table per __process__
+- Page table resides in physical memory 
+
+### Problems
+
+- Each memory will need at least __2__ memory accesses
+    - Solution: __cache__
+- Page tables require __lots__ of physical memory, the data structure 
+is too big
+    - Solution: try a tree
+
