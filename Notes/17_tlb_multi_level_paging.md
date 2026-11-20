@@ -79,7 +79,7 @@ and any invalid pages of the page table (completely invalid PTE blocks) remain u
     - Page Table Bytes / Page Size
     - `2^10 B / 2^6 B/page = 2^4 pages`
 7. How many PTEs per page
-    - Page Size / Page Table Bytes
+    - Page Size / Page Table Entry Bytes
     - `2^6 B/page / 2^2 B/PTE = 2^4 PTE / page`
 8. How many PDEs in page directory
     - need a PDE for each page table page (see question 6)
